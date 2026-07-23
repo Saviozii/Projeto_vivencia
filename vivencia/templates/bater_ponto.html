@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bater Ponto - Vivência</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 380px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 36px 28px;
+            text-align: center;
+        }
+
+        .aluno-nome {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .data-hoje {
+            color: #1f2937;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            text-transform: capitalize;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .status-ausente {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .status-presente {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-completo {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .horarios {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .horario-item {
+            text-align: center;
+        }
+
+        .horario-item .label {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 4px;
+        }
+
+        .horario-item .valor {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .horario-item .valor.pendente {
+            color: #d1d5db;
+        }
+
+        .mensagem-sucesso {
+            background: #dcfce7;
+            color: #166534;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background: #4f46e5;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        button:hover {
+            background: #4338ca;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button.saida {
+            background: #059669;
+        }
+
+        button.saida:hover {
+            background: #047857;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <p class="aluno-nome">{{ request.user.first_name|default:request.user.username }}</p>
+        <p class="data-hoje">{% now "l, d \d\e F" %}</p>
+
+        {% if presente is None %}
+            <span class="status-badge status-ausente">Ponto não registrado</span>
+        {% elif presente.hora_saida is None %}
+            <span class="status-badge status-presente">Presente</span>
+        {% else %}
+            <span class="status-badge status-completo">Dia concluído</span>
+        {% endif %}
+
+        <div class="horarios">
+            <div class="horario-item">
+                <p class="label">Entrada</p>
+                <p class="valor {% if not presente %}pendente{% endif %}">
+                    {% if presente %}{{ presente.hora_entrada|time:"H:i" }}{% else %}--:--{% endif %}
+                </p>
+            </div>
+            <div class="horario-item">
+                <p class="label">Saída</p>
+                <p class="valor {% if not presente or not presente.hora_saida %}pendente{% endif %}">
+                    {% if presente and presente.hora_saida %}{{ presente.hora_saida|time:"H:i" }}{% else %}--:--{% endif %}
+                </p>
+            </div>
+        </div>
+
+        {% if mensagem %}
+            <div class="mensagem-sucesso">{{ mensagem }}</div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            {% if presente and presente.hora_saida is None %}
+                <button type="submit" class="saida">Registrar Saída</button>
+            {% elif presente and presente.hora_saida %}
+                <button type="submit" disabled style="background:#d1d5db; cursor:not-allowed;">Ponto do dia concluído</button>
+            {% else %}
+                <button type="submit">Registrar Entrada</button>
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html>
