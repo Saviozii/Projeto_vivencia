@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ inf.user.first_name|default:inf.user.username }} - Vivência</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f3f4f6;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .voltar {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .voltar:hover {
+            text-decoration: underline;
+        }
+
+        .perfil-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            padding: 28px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .perfil-info h1 {
+            color: #1f2937;
+            font-size: 22px;
+            margin-bottom: 4px;
+        }
+
+        .perfil-info p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .dados-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .dado-item {
+            background: #fff;
+            border-radius: 10px;
+            padding: 16px 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .dado-item .rotulo {
+            font-size: 12px;
+            color: #9ca3af;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .dado-item .valor {
+            font-size: 15px;
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            padding: 24px;
+        }
+
+        .card h2 {
+            color: #1f2937;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            font-size: 12px;
+            color: #9ca3af;
+            text-transform: uppercase;
+            padding: 10px 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 12px;
+            font-size: 14px;
+            color: #1f2937;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-presente {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-completo {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .vazio {
+            text-align: center;
+            color: #9ca3af;
+            padding: 30px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'super_dershboard' %}" class="voltar">&larr; Voltar ao dashboard</a>
+
+        <div class="perfil-card">
+            <div class="avatar">
+                {{ inf.user.first_name|default:inf.user.username|first|upper }}
+            </div>
+            <div class="perfil-info">
+                <h1>{{ inf.user.first_name|default:inf.user.username }}</h1>
+                <p>Turma {{ inf.turma }}</p>
+            </div>
+        </div>
+
+        <div class="dados-grid">
+            <div class="dado-item">
+                <div class="rotulo">Usuário</div>
+                <div class="valor">{{ inf.user.username }}</div>
+            </div>
+            <div class="dado-item">
+                <div class="rotulo">E-mail</div>
+                <div class="valor">{{ inf.user.email|default:"--" }}</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Histórico de presenças</h2>
+
+            {% if inf.presenca_dia.all %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Entrada</th>
+                            <th>Saída</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for presenca in presencas %}
+                            <tr>
+                                <td>{{ presenca.dia_ponto|date:"d/m/Y" }}</td>
+                                <td>{{ presenca.hora_entrada|time:"H:i" }}</td>
+                                <td>{% if presenca.hora_saida %}{{ presenca.hora_saida|time:"H:i" }}{% else %}--:--{% endif %}</td>
+                                <td>
+                                    {% if presenca.hora_saida %}
+                                        <span class="status-pill status-completo">Concluído</span>
+                                    {% else %}
+                                        <span class="status-pill status-presente">Presente</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="vazio">Nenhuma presença registrada ainda.</div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

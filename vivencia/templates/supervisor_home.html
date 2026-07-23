@@ -55,6 +55,7 @@
             margin-bottom: 12px;
             transition: background 0.2s;
             text-align: left;
+            text-decoration: none;
         }
 
         .menu-item:hover {
@@ -231,6 +232,9 @@
         <h2>Vivência</h2>
         <p>Painel do supervisor</p>
 
+        <a href="{% url 'super_dershboard' %}" class="menu-item">
+            <span class="icone">📊</span> Dashboard
+        </a>
         <button class="menu-item" onclick="abrirPainel('painel-turma')">
             <span class="icone">+</span> Adicionar Turma
         </button>
@@ -242,7 +246,7 @@
     <!-- Conteúdo principal -->
     <div class="main-content">
         <h1>Painel do Supervisor</h1>
-        <p>Olá Supervisor Tudo certo?</p>
+        <p>Selecione uma opção na barra lateral para começar.</p>
     </div>
 
     <!-- Overlay compartilhado -->

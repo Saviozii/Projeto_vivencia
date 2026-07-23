@@ -1,5 +1,5 @@
 #function_view.py:
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import Add_Turma, Add_Aluno
 from django.http import HttpResponse
@@ -87,7 +87,17 @@ def bater_ponto(request):
     return presente, mensagem
 
 
-    
+#Consulta 
+def grafico_presenca_hj():
+    dia_agr = timezone.localdate()
+    presente_hj = Presenca.objects.all().filter(dia_ponto = dia_agr)
+    return presente_hj
 
-
-
+def aluno_infor(user_id):
+    aluno_inf = get_object_or_404(Presenca, id = user_id)
+    presencas = aluno_inf.dia_ponto.all()
+    contexto = {
+        'aluno_inf' : aluno_inf,
+        'presencas' : presencas
+    }
+    return contexto

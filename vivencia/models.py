@@ -11,7 +11,7 @@ class Turmas(models.Model):
 class Aluno(models.Model):
     
     user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="aluno")
-
+    
     turma = models.ForeignKey(Turmas, on_delete=models.CASCADE, related_name="alunos")
 
     def __str__(self):
