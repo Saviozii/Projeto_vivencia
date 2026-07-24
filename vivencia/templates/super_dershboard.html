@@ -153,11 +153,12 @@
 </head>
 <body>
     <div class="container">
+    <a href="{% url 'supervisor_home' %}" class="voltar">&larr; Home</a>
+    <div class="container">
         <div class="page-header">
             <h1>Dashboard do Supervisor</h1>
             <p>{% now "l, d \d\e F \d\e Y" %}</p>
         </div>
-
         <div class="grid-topo">
             <div class="card">
                 <h2>Resumo de hoje</h2>

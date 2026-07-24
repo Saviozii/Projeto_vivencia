@@ -4,6 +4,7 @@ from .forms import Add_Turma, Add_Aluno
 from django.http import HttpResponse
 from .function_view import adicionar_turma, adicionar_aluno, bater_ponto, grafico_presenca_hj, aluno_infor
 from .models import Aluno
+from django.shortcuts import render, get_object_or_404
 
 @login_required
 def aluno_home(request):
@@ -45,11 +46,15 @@ def super_dershboard(request):
     return render(request, 'super_dershboard.html', contexto)
 
 
-def informaoes_aluno(request,user_id):
-    aluno_inf, presencas = aluno_infor(user_id)
-    contexto = {
-        'aluno_inf' : aluno_inf,
-        'presencas' : presencas
+def informacoes_aluno(request, user_id):
+    aluno = get_object_or_404(Aluno, id=user_id)
+
+    context = {
+        "aluno": aluno,
+        "presencas": aluno.presencas.order_by("-dia_ponto")
     }
-    return render(request, 'aluno_inf.html', contexto)
+    print(aluno.user.username)
+    print(aluno.user.first_name)
+    print(aluno.turma)
+    return render(request, "aluno_inf.html", context)
 

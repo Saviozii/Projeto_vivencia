@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ inf.user.first_name|default:inf.user.username }} - Vivência</title>
+    <title>{{ aluno.user.first_name }} - Vivência</title>
     <style>
         * {
             margin: 0;
@@ -171,29 +171,29 @@
 
         <div class="perfil-card">
             <div class="avatar">
-                {{ inf.user.first_name|default:inf.user.username|first|upper }}
+                {{ "Foto" }}
             </div>
             <div class="perfil-info">
-                <h1>{{ inf.user.first_name|default:inf.user.username }}</h1>
-                <p>Turma {{ inf.turma }}</p>
+                <h1>{{ aluno.user.first_name }}</h1>
+                <p>Turma:  {{ aluno.turma }}</p>
             </div>
         </div>
 
         <div class="dados-grid">
             <div class="dado-item">
                 <div class="rotulo">Usuário</div>
-                <div class="valor">{{ inf.user.username }}</div>
+                <div class="valor">{{ aluno.user.username }}</div>
             </div>
             <div class="dado-item">
                 <div class="rotulo">E-mail</div>
-                <div class="valor">{{ inf.user.email|default:"--" }}</div>
+                <div class="valor">{{ aluno.user.email|default:"--" }}</div>
             </div>
         </div>
 
         <div class="card">
             <h2>Histórico de presenças</h2>
 
-            {% if inf.presenca_dia.all %}
+            {% if presencas %}
                 <table>
                     <thead>
                         <tr>

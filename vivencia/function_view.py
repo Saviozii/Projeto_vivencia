@@ -94,10 +94,11 @@ def grafico_presenca_hj():
     return presente_hj
 
 def aluno_infor(user_id):
-    aluno_inf = get_object_or_404(Presenca, id = user_id)
-    presencas = aluno_inf.dia_ponto.all()
+    aluno_inf = get_object_or_404(Aluno, id = user_id)
+    presencas = aluno_inf.presencas.order_by("-dia_ponto")
     contexto = {
         'aluno_inf' : aluno_inf,
         'presencas' : presencas
     }
     return contexto
+
