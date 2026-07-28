@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Vivência</title>
+    <title>Painel do Supervisor - Vivência</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14,69 +16,137 @@
 
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f3f4f6;
+            background: #f4f3f9;
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 40px 20px 60px;
+            color: #211d33;
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1040px;
             margin: 0 auto;
         }
 
-        .page-header {
-            margin-bottom: 28px;
-        }
-
-        .page-header h1 {
-            color: #1f2937;
-            font-size: 26px;
-            margin-bottom: 4px;
-        }
-
-        .page-header p {
-            color: #6b7280;
+        .voltar {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #4f46e5;
+            text-decoration: none;
             font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .voltar:hover {
+            text-decoration: underline;
+        }
+
+        /* ---------- Painel superior (relógio de ponto) ---------- */
+        .painel-topo {
+            background: linear-gradient(120deg, #211d33 0%, #37235e 55%, #4f46e5 100%);
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .painel-topo::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-size: 14px 14px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .painel-topo h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .painel-topo .subtitulo {
+            font-size: 13px;
+            color: #c9c3f0;
             text-transform: capitalize;
         }
 
-        .grid-topo {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 28px;
+        .relogio {
+            font-family: 'Space Mono', monospace;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 10px 20px;
+            border-radius: 10px;
+            position: relative;
+            z-index: 1;
         }
 
-        .card {
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            padding: 24px;
+        .relogio span.piscando {
+            animation: piscar 1s steps(1) infinite;
         }
 
+        @keyframes piscar {
+            50% { opacity: 0.3; }
+        }
+
+        /* ---------- Cards de resumo ---------- */
         .cards-resumo {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 16px;
+            margin-bottom: 24px;
         }
 
         .resumo-item {
-            background: #f9fafb;
-            border-radius: 10px;
-            padding: 18px;
-            text-align: center;
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(33, 29, 51, 0.06);
+            border-left: 4px solid transparent;
         }
 
+        .resumo-item.total { border-left-color: #4f46e5; }
+        .resumo-item.ativos { border-left-color: #f59e0b; }
+        .resumo-item.completos { border-left-color: #22c55e; }
+        .resumo-item.ausentes { border-left-color: #ef4444; }
+
         .resumo-item .numero {
-            font-size: 28px;
+            font-family: 'Space Mono', monospace;
+            font-size: 30px;
             font-weight: 700;
-            color: #4f46e5;
+            color: #211d33;
         }
 
         .resumo-item .rotulo {
             font-size: 13px;
             color: #6b7280;
             margin-top: 4px;
+        }
+
+        /* ---------- Grid principal ---------- */
+        .grid-topo {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(33, 29, 51, 0.06);
+            padding: 24px;
         }
 
         .card h2 {
@@ -90,9 +160,35 @@
             height: 220px;
         }
 
+        /* ---------- Busca ---------- */
+        .busca-linha {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 12px;
+        }
+
+        .busca-linha input {
+            flex: 1;
+            max-width: 260px;
+            padding: 9px 14px;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.15s ease;
+        }
+
+        .busca-linha input:focus {
+            border-color: #4f46e5;
+        }
+
+        /* ---------- Tabela "cartão de ponto" ---------- */
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
         }
 
         th {
@@ -105,14 +201,42 @@
         }
 
         td {
-            padding: 12px;
+            padding: 13px 12px;
             font-size: 14px;
             color: #1f2937;
-            border-bottom: 1px solid #f3f4f6;
         }
 
-        tr:last-child td {
+        tbody tr {
+            border-bottom: 1px dashed #e2e0ee;
+            transition: background 0.1s ease;
+        }
+
+        tbody tr:hover {
+            background: #faf9ff;
+        }
+
+        tbody tr:last-child {
             border-bottom: none;
+        }
+
+        td.aluno-cel {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar-mini {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
         }
 
         td a {
@@ -149,33 +273,94 @@
             padding: 30px 0;
             font-size: 14px;
         }
+
+        @media (max-width: 720px) {
+            .cards-resumo { grid-template-columns: repeat(2, 1fr); }
+            .grid-topo { grid-template-columns: 1fr; }
+            .painel-topo { flex-direction: column; align-items: flex-start; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .relogio span.piscando { animation: none; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-    <a href="{% url 'supervisor_home' %}" class="voltar">&larr; Home</a>
-    <div class="container">
-        <div class="page-header">
-            <h1>Dashboard do Supervisor</h1>
-            <p>{% now "l, d \d\e F \d\e Y" %}</p>
+        <a href="{% url 'supervisor_home' %}" class="voltar">&larr; Home</a>
+
+        <div class="painel-topo">
+            <div>
+                <h1>Painel do Supervisor</h1>
+                <div class="subtitulo">{% now "l, d \d\e F \d\e Y" %}</div>
+            </div>
+            <div class="relogio" id="relogio">--:--<span class="piscando">:</span>--</div>
         </div>
+
+        <div class="cards-resumo">
+            <div class="resumo-item total">
+                <div class="numero">{{ total_aluno|length }}</div>
+                <div class="rotulo">Total de alunos</div>
+            </div>
+            <div class="resumo-item ativos">
+                <div class="numero" id="numero-ativos">0</div>
+                <div class="rotulo">Ainda presentes</div>
+            </div>
+            <div class="resumo-item completos">
+                <div class="numero" id="numero-completos">0</div>
+                <div class="rotulo">Dia concluído</div>
+            </div>
+            <div class="resumo-item ausentes">
+                <div class="numero" id="numero-ausentes">0</div>
+                <div class="rotulo">Sem ponto hoje</div>
+            </div>
+        </div>
+
         <div class="grid-topo">
             <div class="card">
-                <h2>Resumo de hoje</h2>
-                <div class="cards-resumo">
-                    <div class="resumo-item">
-                        <div class="numero">{{ presentes_hj|length }}</div>
-                        <div class="rotulo">Total de pontos</div>
-                    </div>
-                    <div class="resumo-item">
-                        <div class="numero" id="numero-ativos">0</div>
-                        <div class="rotulo">Ainda presentes</div>
-                    </div>
-                    <div class="resumo-item">
-                        <div class="numero" id="numero-completos">0</div>
-                        <div class="rotulo">Dia concluído</div>
-                    </div>
+                <div class="busca-linha">
+                    <h2 style="margin-bottom:0;">Alunos com ponto registrado hoje</h2>
+                    <input type="text" id="busca-aluno" placeholder="Buscar aluno ou turma...">
                 </div>
+
+                {% if presentes_hj %}
+                    <table id="tabela-presencas">
+                        <thead>
+                            <tr>
+                                <th>Aluno</th>
+                                <th>Turma</th>
+                                <th>Entrada</th>
+                                <th>Saída</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for presenca in presentes_hj %}
+                                <tr data-busca="{{ presenca.aluno.user.first_name|default:presenca.aluno.user.username }} {{ presenca.aluno.turma }}">
+                                    <td class="aluno-cel">
+                                        <div class="avatar-mini">{{ presenca.aluno.user.first_name|default:presenca.aluno.user.username|first|upper }}</div>
+                                        <a href="{% url 'informacoes_aluno' presenca.aluno.id %}">
+                                            {{ presenca.aluno.user.first_name|default:presenca.aluno.user.username }}
+                                        </a>
+                                    </td>
+                                    <td>{{ presenca.aluno.turma }}</td>
+                                    <td>{{ presenca.hora_entrada|time:"H:i" }}</td>
+                                    <td>{% if presenca.hora_saida %}{{ presenca.hora_saida|time:"H:i" }}{% else %}--:--{% endif %}</td>
+                                    <td>
+                                        {% if presenca.hora_saida %}
+                                            <span class="status-pill status-completo">Concluído</span>
+                                        {% else %}
+                                            <span class="status-pill status-presente">Presente</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="vazio" id="vazio-busca" style="display:none;">Nenhum aluno encontrado.</div>
+                {% else %}
+                    <div class="vazio">Nenhum ponto registrado hoje ainda.</div>
+                {% endif %}
             </div>
 
             <div class="card">
@@ -185,70 +370,44 @@
                 </div>
             </div>
         </div>
-
-        <div class="card">
-            <h2>Alunos com ponto registrado hoje</h2>
-
-            {% if presentes_hj %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Aluno</th>
-                            <th>Turma</th>
-                            <th>Entrada</th>
-                            <th>Saída</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for presenca in presentes_hj %}
-                            <tr>
-                                <td>
-                                    <a href="{% url 'informacoes_aluno' presenca.aluno.id %}">
-                                        {{ presenca.aluno.user.first_name|default:presenca.aluno.user.username }}
-                                    </a>
-                                </td>
-                                <td>{{ presenca.aluno.turma }}</td>
-                                <td>{{ presenca.hora_entrada|time:"H:i" }}</td>
-                                <td>{% if presenca.hora_saida %}{{ presenca.hora_saida|time:"H:i" }}{% else %}--:--{% endif %}</td>
-                                <td>
-                                    {% if presenca.hora_saida %}
-                                        <span class="status-pill status-completo">Concluído</span>
-                                    {% else %}
-                                        <span class="status-pill status-presente">Presente</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <div class="vazio">Nenhum ponto registrado hoje ainda.</div>
-            {% endif %}
-        </div>
     </div>
 
     <script>
+        // Relógio de ponto ao vivo
+        function atualizarRelogio() {
+            const agora = new Date();
+            const h = String(agora.getHours()).padStart(2, '0');
+            const m = String(agora.getMinutes()).padStart(2, '0');
+            const s = String(agora.getSeconds()).padStart(2, '0');
+            document.getElementById('relogio').innerHTML = `${h}<span class="piscando">:</span>${m}<span class="piscando">:</span>${s}`;
+        }
+        atualizarRelogio();
+        setInterval(atualizarRelogio, 1000);
+
+        // Dados vindos do Django
         const dadosPresenca = [
             {% for presenca in presentes_hj %}
                 { temSaida: {{ presenca.hora_saida|yesno:"true,false" }} },
             {% endfor %}
         ];
+        const totalAlunos = {{ total_aluno|length }};
 
         const ativos = dadosPresenca.filter(p => !p.temSaida).length;
         const completos = dadosPresenca.filter(p => p.temSaida).length;
+        const ausentes = Math.max(totalAlunos - dadosPresenca.length, 0);
 
         document.getElementById('numero-ativos').textContent = ativos;
         document.getElementById('numero-completos').textContent = completos;
+        document.getElementById('numero-ausentes').textContent = ausentes;
 
         const ctx = document.getElementById('grafico-status').getContext('2d');
         new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Ainda presentes', 'Dia concluído'],
+                labels: ['Ainda presentes', 'Dia concluído', 'Sem ponto hoje'],
                 datasets: [{
-                    data: [ativos, completos],
-                    backgroundColor: ['#f59e0b', '#22c55e'],
+                    data: [ativos, completos, ausentes],
+                    backgroundColor: ['#f59e0b', '#22c55e', '#ef4444'],
                     borderWidth: 0
                 }]
             },
@@ -263,6 +422,23 @@
                 }
             }
         });
+
+        // Busca em tempo real na tabela
+        const inputBusca = document.getElementById('busca-aluno');
+        if (inputBusca) {
+            inputBusca.addEventListener('input', function() {
+                const termo = this.value.trim().toLowerCase();
+                const linhas = document.querySelectorAll('#tabela-presencas tbody tr');
+                let algumVisivel = false;
+                linhas.forEach(linha => {
+                    const corresponde = linha.dataset.busca.toLowerCase().includes(termo);
+                    linha.style.display = corresponde ? '' : 'none';
+                    if (corresponde) algumVisivel = true;
+                });
+                const vazio = document.getElementById('vazio-busca');
+                if (vazio) vazio.style.display = algumVisivel ? 'none' : 'block';
+            });
+        }
     </script>
 </body>
 </html>

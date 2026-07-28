@@ -39,9 +39,10 @@ def supervisor_home(request):
 
 @login_required
 def super_dershboard(request):
-    presentes_hj = grafico_presenca_hj() 
+    presentes_hj, total_aluno = grafico_presenca_hj() 
     contexto = {
-        "presentes_hj" : presentes_hj
+        "presentes_hj" : presentes_hj,
+        "total_aluno" : total_aluno
     }
     return render(request, 'super_dershboard.html', contexto)
 

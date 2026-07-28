@@ -98,7 +98,12 @@ def bater_ponto(request):
 def grafico_presenca_hj():
     dia_agr = timezone.localdate()
     presente_hj = Presenca.objects.all().filter(dia_ponto = dia_agr)
-    return presente_hj
+    
+    total_aluno = Aluno.objects.all()
+
+    
+
+    return presente_hj, total_aluno
 
 def aluno_infor(user_id):
     aluno_inf = get_object_or_404(Aluno, id = user_id)

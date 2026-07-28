@@ -64,6 +64,15 @@
             overflow: hidden;
         }
 
+        .avatar.tem-foto {
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        .avatar.tem-foto:hover {
+            transform: scale(1.05);
+        }
+
         .avatar img {
             width: 100%;
             height: 100%;
@@ -170,6 +179,43 @@
             padding: 30px 0;
             font-size: 14px;
         }
+
+        /* Modal da foto ampliada */
+        .foto-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .foto-modal.aberto {
+            display: flex;
+        }
+
+        .foto-modal img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .foto-modal-fechar {
+            position: absolute;
+            top: 24px;
+            right: 32px;
+            color: #fff;
+            font-size: 32px;
+            line-height: 1;
+            cursor: pointer;
+            font-weight: 300;
+        }
     </style>
 </head>
 <body>
@@ -177,7 +223,8 @@
         <a href="{% url 'super_dershboard' %}" class="voltar">&larr; Voltar ao dashboard</a>
 
         <div class="perfil-card">
-            <div class="avatar">
+            <div class="avatar {% if aluno.foto %}tem-foto{% endif %}"
+                 {% if aluno.foto %}onclick="abrirFotoModal()"{% endif %}>
                 {% if aluno.foto %}
                     <img src="{{ aluno.foto.url }}" alt="Foto de {{ aluno.user.first_name }}">
                 {% else %}
@@ -236,5 +283,28 @@
             {% endif %}
         </div>
     </div>
+
+    {% if aluno.foto %}
+    <div class="foto-modal" id="fotoModal" onclick="fecharFotoModal(event)">
+        <span class="foto-modal-fechar" onclick="fecharFotoModal(event)">&times;</span>
+        <img src="{{ aluno.foto.url }}" alt="Foto de {{ aluno.user.first_name }}">
+    </div>
+
+    <script>
+        function abrirFotoModal() {
+            document.getElementById('fotoModal').classList.add('aberto');
+        }
+
+        function fecharFotoModal(event) {
+            document.getElementById('fotoModal').classList.remove('aberto');
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                fecharFotoModal(event);
+            }
+        });
+    </script>
+    {% endif %}
 </body>
 </html>
