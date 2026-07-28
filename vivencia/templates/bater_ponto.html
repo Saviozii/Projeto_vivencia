@@ -105,6 +105,37 @@
             margin-bottom: 20px;
         }
 
+        .field {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .field label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .field textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 90px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .field textarea:focus {
+            outline: none;
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+        }
+
         button {
             width: 100%;
             padding: 16px;
@@ -169,7 +200,12 @@
 
         <form method="post">
             {% csrf_token %}
+
             {% if presente and presente.hora_saida is None %}
+                <div class="field">
+                    <label for="atividade_diaria">Faca um resumo das atividades realizadas hoje.</label>
+                    <textarea name="atividade_diaria" id="atividade_diaria" required placeholder="Descreva brevemente sua atividade..."></textarea>
+                </div>
                 <button type="submit" class="saida">Registrar Saída</button>
             {% elif presente and presente.hora_saida %}
                 <button type="submit" disabled style="background:#d1d5db; cursor:not-allowed;">Ponto do dia concluído</button>
