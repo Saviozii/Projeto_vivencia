@@ -11,6 +11,8 @@ class Turmas(models.Model):
 class Aluno(models.Model):
     
     user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="aluno")
+
+    foto = models.ImageField(upload_to='fotos_alunos/',blank=True, null=True)
     
     turma = models.ForeignKey(Turmas, on_delete=models.CASCADE, related_name="alunos")
 

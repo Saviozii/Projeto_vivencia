@@ -7,10 +7,12 @@ class Add_Turma(forms.ModelForm):
         fields = ["turma"]
 
 class Add_Aluno(forms.Form):
+    foto = forms.ImageField()
     username = forms.CharField(max_length=200)
     nome = forms.CharField(max_length=200)
     email = forms.EmailField()
     senha = forms.CharField(widget=forms.PasswordInput)
+
 
     turma = forms.ModelChoiceField(
         queryset=Turmas.objects.all()

@@ -29,7 +29,7 @@ def adicionar_aluno(request):
     mensagem = ""
 
     if request.method == "POST" and request.POST.get("form_type") == "aluno":
-        form = Add_Aluno(request.POST)
+        form = Add_Aluno(request.POST, request.FILES)
 
         if form.is_valid():
 
@@ -42,7 +42,8 @@ def adicionar_aluno(request):
 
             aluno = Aluno.objects.create(
                 user=user,
-                turma=form.cleaned_data["turma"]
+                turma=form.cleaned_data["turma"],
+                foto=form.cleaned_data["foto"]
             )
 
             mensagem = (

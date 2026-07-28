@@ -2,6 +2,9 @@ from django.contrib import admin
 from django.urls import path
 from login_contas.views import login_view
 from vivencia.views import supervisor_home, aluno_home, bate_ponto, super_dershboard, informacoes_aluno
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -13,3 +16,5 @@ urlpatterns = [
     path("informacoes_aluno/<int:user_id>/",informacoes_aluno,name="informacoes_aluno"),
 ]
 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
