@@ -59,7 +59,7 @@ def bater_ponto(request):
     aluno = request.user.aluno
     mensagem = ''
     presente = None
-    
+
     if request.method == 'POST':
         dia_hj = timezone.localdate()
         hora_agr = timezone.localtime().time()
@@ -71,7 +71,7 @@ def bater_ponto(request):
         mensagem = f"Entrada registrada com sucesso!"
 
         if presente is None:
-            Presenca.objects.create(
+            presente = Presenca.objects.create(
                 aluno = aluno,
                 dia_ponto = dia_hj,
                 status = 'P',
@@ -80,8 +80,14 @@ def bater_ponto(request):
             print(f"O {aluno} entrou as {hora_agr} Horas.")
         
         elif presente.hora_saida is None:
+            atividade = request.POST.get('atividade_diaria','')
             presente.hora_saida = hora_agr
+            presente.atividade_diaria = atividade
             presente.save()
+            print(f"""
+            O {aluno} fez:
+            {atividade}
+            """)
             mensagem = f"Saíada registrada com sucesso!"
 
     return presente, mensagem
