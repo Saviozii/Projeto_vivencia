@@ -56,6 +56,7 @@ def adicionar_aluno(request):
 
     return form, mensagem
 
+
 def bater_ponto(request):
     aluno = request.user.aluno
     mensagem = ''
@@ -95,14 +96,10 @@ def bater_ponto(request):
 
 
 #Consulta 
-def grafico_presenca_hj():
-    dia_agr = timezone.localdate()
-    presente_hj = Presenca.objects.all().filter(dia_ponto = dia_agr)
-    
+def grafico_presenca_hj(data=None):
+    dia = data if data else timezone.localdate()
+    presente_hj = Presenca.objects.all().filter(dia_ponto=dia)
     total_aluno = Aluno.objects.all()
-
-    
-
     return presente_hj, total_aluno
 
 def aluno_infor(user_id):

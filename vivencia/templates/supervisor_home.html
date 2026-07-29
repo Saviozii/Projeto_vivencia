@@ -18,59 +18,135 @@
             display: flex;
         }
 
-        /* Sidebar */
+        /* ---------- Sidebar ---------- */
         .sidebar {
             width: 260px;
             min-height: 100vh;
             background: linear-gradient(180deg, #4f46e5 0%, #7c3aed 100%);
             padding: 32px 20px;
             flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
         }
 
-        .sidebar h2 {
+        .sidebar::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-size: 16px 16px;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .marca {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .marca-icone {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
             color: #fff;
-            font-size: 18px;
-            margin-bottom: 4px;
+            flex-shrink: 0;
         }
 
-        .sidebar p {
-            color: rgba(255, 255, 255, 0.75);
-            font-size: 13px;
-            margin-bottom: 28px;
+        .marca h2 {
+            color: #fff;
+            font-size: 17px;
+            line-height: 1.2;
+        }
+
+        .marca p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+        }
+
+        .menu-rotulo {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 700;
+            margin: 4px 0 10px 4px;
+            position: relative;
+            z-index: 1;
         }
 
         .menu-item {
             width: 100%;
             display: flex;
             align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.1);
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.08);
             color: #fff;
             border: none;
-            border-radius: 8px;
-            padding: 12px 14px;
+            border-radius: 10px;
+            padding: 11px 12px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            margin-bottom: 12px;
-            transition: background 0.2s;
+            margin-bottom: 10px;
+            transition: background 0.2s, transform 0.15s;
             text-align: left;
             text-decoration: none;
+            position: relative;
+            z-index: 1;
         }
 
         .menu-item:hover {
-            background: rgba(255, 255, 255, 0.22);
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(2px);
         }
 
-        .menu-item .icone {
-            font-size: 16px;
-            font-weight: 700;
+        .menu-item .icone-chip {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
-        /* Conteúdo principal */
+        .menu-item .icone-chip svg {
+            width: 16px;
+            height: 16px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .sidebar-rodape {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ---------- Conteúdo principal ---------- */
         .main-content {
             flex: 1;
-            padding: 40px;
+            padding: 48px;
         }
 
         .main-content h1 {
@@ -79,12 +155,81 @@
             margin-bottom: 6px;
         }
 
-        .main-content p {
+        .main-content > p {
             color: #6b7280;
             font-size: 14px;
+            margin-bottom: 32px;
         }
 
-        /* Overlay */
+        .atalhos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            max-width: 780px;
+        }
+
+        .atalho-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(31, 41, 55, 0.06);
+            text-decoration: none;
+            color: inherit;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+            border: 1px solid transparent;
+        }
+
+        .atalho-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(79, 70, 229, 0.14);
+            border-color: #ddd6fe;
+        }
+
+        .atalho-icone {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .atalho-icone.roxo { background: #ede9fe; }
+        .atalho-icone.indigo { background: #e0e7ff; }
+        .atalho-icone.verde { background: #dcfce7; }
+
+        .atalho-icone svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .atalho-icone.roxo svg { stroke: #7c3aed; }
+        .atalho-icone.indigo svg { stroke: #4f46e5; }
+        .atalho-icone.verde svg { stroke: #16a34a; }
+
+        .atalho-card h3 {
+            font-size: 15px;
+            color: #1f2937;
+        }
+
+        .atalho-card p {
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+
+        /* ---------- Overlay ---------- */
         .overlay {
             position: fixed;
             top: 0;
@@ -103,7 +248,7 @@
             visibility: visible;
         }
 
-        /* Painel lateral (direita) */
+        /* ---------- Painel lateral (direita) ---------- */
         .painel {
             position: fixed;
             top: 0;
@@ -126,14 +271,36 @@
 
         .painel-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 12px;
             margin-bottom: 24px;
+        }
+
+        .painel-header .icone-chip {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #ede9fe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .painel-header .icone-chip svg {
+            width: 18px;
+            height: 18px;
+            stroke: #7c3aed;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .painel-header h2 {
             color: #1f2937;
-            font-size: 20px;
+            font-size: 19px;
+            flex: 1;
         }
 
         .fechar {
@@ -156,9 +323,12 @@
             background: #dcfce7;
             color: #166534;
             padding: 10px 14px;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 14px;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .field {
@@ -247,29 +417,85 @@
         .painel button[type="submit"]:hover {
             background: #4338ca;
         }
+
+        @media (max-width: 640px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; min-height: auto; }
+            .main-content { padding: 28px 20px; }
+        }
     </style>
 </head>
 <body>
     <!-- Barra lateral -->
     <div class="sidebar">
-        <h2>Vivência</h2>
-        <p>Painel do supervisor</p>
+        <div class="marca">
+            <div class="marca-icone">V</div>
+            <div>
+                <h2>Vivência</h2>
+                <p>Painel do supervisor</p>
+            </div>
+        </div>
+
+        <div class="menu-rotulo">Menu</div>
 
         <a href="{% url 'super_dershboard' %}" class="menu-item">
-            <span class="icone">📊</span> Dashboard
+            <span class="icone-chip">
+                <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-6 4 3 5-8"/></svg>
+            </span>
+            Dashboard
         </a>
         <button class="menu-item" onclick="abrirPainel('painel-turma')">
-            <span class="icone">+</span> Adicionar Turma
+            <span class="icone-chip">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            </span>
+            Adicionar Turma
         </button>
         <button class="menu-item" onclick="abrirPainel('painel-aluno')">
-            <span class="icone">+</span> Adicionar Aluno
+            <span class="icone-chip">
+                <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+            </span>
+            Adicionar Aluno
         </button>
+
+        <div class="sidebar-rodape">Vivência &middot; Instituto JCA</div>
     </div>
 
     <!-- Conteúdo principal -->
     <div class="main-content">
         <h1>Painel do Supervisor</h1>
-        <p>Selecione uma opção na barra lateral para começar.</p>
+        <p>Selecione uma opção na barra lateral ou use um dos atalhos abaixo.</p>
+
+        <div class="atalhos">
+            <a href="{% url 'super_dershboard' %}" class="atalho-card">
+                <div class="atalho-icone indigo">
+                    <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-6 4 3 5-8"/></svg>
+                </div>
+                <div>
+                    <h3>Ver dashboard</h3>
+                    <p>Acompanhe as presenças de hoje e o resumo por turma.</p>
+                </div>
+            </a>
+
+            <button class="atalho-card" onclick="abrirPainel('painel-turma')">
+                <div class="atalho-icone roxo">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                </div>
+                <div>
+                    <h3>Adicionar turma</h3>
+                    <p>Cadastre uma nova turma para organizar os alunos.</p>
+                </div>
+            </button>
+
+            <button class="atalho-card" onclick="abrirPainel('painel-aluno')">
+                <div class="atalho-icone verde">
+                    <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+                </div>
+                <div>
+                    <h3>Adicionar aluno</h3>
+                    <p>Cadastre um novo aluno e vincule à turma correta.</p>
+                </div>
+            </button>
+        </div>
     </div>
 
     <!-- Overlay compartilhado -->
@@ -278,12 +504,15 @@
     <!-- Painel: Adicionar Turma -->
     <div class="painel" id="painel-turma">
         <div class="painel-header">
+            <span class="icone-chip">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            </span>
             <h2>Adicionar Turma</h2>
             <button class="fechar" onclick="fecharPaineis()">&times;</button>
         </div>
 
         {% if mensagem_turma %}
-            <div class="mensagem-sucesso">{{ mensagem_turma }}</div>
+            <div class="mensagem-sucesso">✓ {{ mensagem_turma }}</div>
         {% endif %}
 
         <form method="post" enctype="multipart/form-data">
@@ -308,12 +537,15 @@
     <!-- Painel: Adicionar Aluno -->
     <div class="painel" id="painel-aluno">
         <div class="painel-header">
+            <span class="icone-chip">
+                <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+            </span>
             <h2>Adicionar Aluno</h2>
             <button class="fechar" onclick="fecharPaineis()">&times;</button>
         </div>
 
         {% if mensagem_aluno %}
-            <div class="mensagem-sucesso">{{ mensagem_aluno }}</div>
+            <div class="mensagem-sucesso">✓ {{ mensagem_aluno }}</div>
         {% endif %}
 
         <form method="post" enctype="multipart/form-data">

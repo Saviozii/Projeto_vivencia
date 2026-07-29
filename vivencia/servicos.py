@@ -13,32 +13,32 @@ def dados_de_hj():
 
     dados_hj = []
 
-    for registro in dados:
+    for i in dados:
 
         dados_hj.append({
-            "aluno": registro.aluno.user.get_full_name() 
-                     or registro.aluno.user.username,
+            "aluno": i.aluno.user.get_full_name() 
+                     or i.aluno.user.username,
 
-            "email": registro.aluno.user.email,
+            "email": i.aluno.user.email,
 
-            "turma": registro.aluno.turma.turma,
+            "turma": i.aluno.turma.turma,
 
-            "status": registro.get_status_display(),
+            "status": i.get_status_display(),
 
-            "data": str(registro.dia_ponto),
+            "data": str(i.dia_ponto),
 
-            "entrada": str(registro.hora_entrada)
-                       if registro.hora_entrada 
+            "entrada": str(i.hora_entrada)
+                       if i.hora_entrada 
                        else "Não registrado",
 
-            "saida": str(registro.hora_saida)
-                     if registro.hora_saida 
+            "saida": str(i.hora_saida)
+                     if i.hora_saida 
                      else "Não registrado",
 
-            "atividade": registro.atividade_diaria
+            "atividade": i.atividade_diaria
                          or "Não informado",
 
-            "observacao": registro.observacao_presenca
+            "observacao": i.observacao_presenca
                           or "Não informado",
         })
 

@@ -3,8 +3,9 @@ from django.contrib.auth.decorators import login_required
 from .forms import Add_Turma, Add_Aluno
 from django.http import HttpResponse
 from .function_view import adicionar_turma, adicionar_aluno, bater_ponto, grafico_presenca_hj, aluno_infor
-from .models import Aluno
+from .models import Aluno, Turmas
 from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
 
 @login_required
 def aluno_home(request):
@@ -39,10 +40,21 @@ def supervisor_home(request):
 
 @login_required
 def super_dershboard(request):
-    presentes_hj, total_aluno = grafico_presenca_hj() 
+    data_str = request.GET.get("data", "")
+    if data_str:
+        try:
+            data = timezone.datetime.strptime(data_str, "%Y-%m-%d").date()
+        except (ValueError, TypeError):
+            data = timezone.localdate()
+    else:
+        data = timezone.localdate()
+
+    presentes_hj, total_aluno = grafico_presenca_hj(data)
     contexto = {
         "presentes_hj" : presentes_hj,
-        "total_aluno" : total_aluno
+        "total_aluno" : total_aluno,
+        "turmas" : Turmas.objects.all(),
+        "data_selecionada" : data.isoformat(),
     }
     return render(request, 'super_dershboard.html', contexto)
 
