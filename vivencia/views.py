@@ -43,7 +43,7 @@ def super_dershboard(request):
     data_str = request.GET.get("data", "")
     if data_str:
         try:
-            data = timezone.datetime.strptime(data_str, "%Y-%m-%d").date()
+            data = timezone.datetime.strptime(data_str, "%d-%m-%Y").date()
         except (ValueError, TypeError):
             data = timezone.localdate()
     else:

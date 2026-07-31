@@ -45,3 +45,8 @@ class Presenca(models.Model):
                 name="unique_presenca_por_dia"
             )
         ]
+
+
+class relatorios(models.Model):
+
+    relatorio_diario = models.TextField(null=True,blank=True)

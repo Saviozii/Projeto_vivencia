@@ -1,5 +1,5 @@
 from django.utils import timezone
-from .models import Presenca
+from ..models import Presenca
 import json
 
 def dados_de_hj():
@@ -48,3 +48,4 @@ def dados_de_hj():
         ensure_ascii=False,
         indent=2
     )
+
