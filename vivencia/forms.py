@@ -4,7 +4,6 @@ from vivencia.models import Aluno, Turmas
 class Add_Turma(forms.ModelForm):
     class Meta:
         model = Turmas
-        fields = ["turma"]
 
 class Add_Aluno(forms.Form):
     foto = forms.ImageField()

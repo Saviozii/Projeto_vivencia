@@ -1,0 +1,33 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: vivencia
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS:-vivencia123}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    ports:
+      - "15672:15672"
+  
+  web:
+    build: .
+    command: gunicorn app.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+
+
+  worker:
+    build: .
+    command: celery -A app worker --loglevel=info
+    environment:
+      - CELERY_BROKER_URL=amqp://vivencia:${RABBITMQ_PASS:-vivencia123}@rabbitmq:5672//
+    depends_on:
+      - rabbitmq
+
+volumes:
+  rabbitmq_data:
+  beat_data:
