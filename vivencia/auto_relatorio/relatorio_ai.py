@@ -32,7 +32,6 @@ model = GoogleGenerativeAI(
     google_api_key = os.getenv("GEMINI_API_KEY"),
 
 )
-print("CHEGUEI AQUI 1")
 
 dados = dados_de_hj()
 

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import Add_Turma, Add_Aluno
 from django.http import HttpResponse
 from django.contrib.auth.models import User
-from .models import Aluno, Turmas, Presenca
+from .models import Aluno, Turmas, Presenca, Localizacao
 from django.utils import timezone
 
 def adicionar_turma(request):
