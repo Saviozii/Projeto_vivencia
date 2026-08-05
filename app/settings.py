@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from pathlib import Path
 
-from celery.schedules import crontab
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -125,18 +124,3 @@ USE_TZ = True
 STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-
-# Celery
-CELERY_BROKER_URL = os.getenv(
-    'CELERY_BROKER_URL',
-    'amqp://vivencia:vivencia123@localhost:5672//',
-)
-CELERY_TIMEZONE = 'America/Sao_Paulo'
-
-CELERY_BEAT_SCHEDULE = {
-    'faltas-diarias-12h': {
-        'task': 'vivencia.tasks.registrar_faltas_do_dia',
-        'schedule': crontab(hour=0, minute=0),
-    },
-}

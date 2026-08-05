@@ -1,11 +1,8 @@
-#Atividades pro celery
-from celery import shared_task
 from django.utils import timezone
 
 from .models import Aluno, Presenca
 
 
-@shared_task
 def registrar_faltas_do_dia():
     dia = timezone.localdate()
     criadas = 0
