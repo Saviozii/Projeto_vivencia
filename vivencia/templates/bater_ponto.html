@@ -105,6 +105,27 @@
             margin-bottom: 20px;
         }
 
+        .aviso-empresa {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 16px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .aviso-empresa strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 15px;
+        }
+
+        .gps-status {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 14px;
+        }
+
         .field {
             margin-bottom: 18px;
             text-align: left;
@@ -157,6 +178,11 @@
             transform: scale(0.98);
         }
 
+        button:disabled {
+            background: #d1d5db !important;
+            cursor: not-allowed;
+        }
+
         button.saida {
             background: #059669;
         }
@@ -171,48 +197,89 @@
         <p class="aluno-nome">{{ request.user.first_name|default:request.user.username }}</p>
         <p class="data-hoje">{% now "l, d \d\e F" %}</p>
 
-        {% if presente is None %}
-            <span class="status-badge status-ausente">Ponto não registrado</span>
-        {% elif presente.hora_saida is None %}
-            <span class="status-badge status-presente">Presente</span>
+        {% if not request.user.aluno.empresa %}
+
+            <div class="aviso-empresa">
+                <strong>Empresa não cadastrada</strong>
+                Você ainda não tem uma empresa de vivência vinculada ao seu cadastro. Procure a coordenação para regularizar antes de bater ponto.
+            </div>
+
         {% else %}
-            <span class="status-badge status-completo">Dia concluído</span>
-        {% endif %}
 
-        <div class="horarios">
-            <div class="horario-item">
-                <p class="label">Entrada</p>
-                <p class="valor {% if not presente %}pendente{% endif %}">
-                    {% if presente %}{{ presente.hora_entrada|time:"H:i" }}{% else %}--:--{% endif %}
-                </p>
-            </div>
-            <div class="horario-item">
-                <p class="label">Saída</p>
-                <p class="valor {% if not presente or not presente.hora_saida %}pendente{% endif %}">
-                    {% if presente and presente.hora_saida %}{{ presente.hora_saida|time:"H:i" }}{% else %}--:--{% endif %}
-                </p>
-            </div>
-        </div>
-
-        {% if mensagem %}
-            <div class="mensagem-sucesso">{{ mensagem }}</div>
-        {% endif %}
-
-        <form method="post">
-            {% csrf_token %}
-
-            {% if presente and presente.hora_saida is None %}
-                <div class="field">
-                    <label for="atividade_diaria">Faca um resumo das atividades realizadas hoje.</label>
-                    <textarea name="atividade_diaria" id="atividade_diaria" required placeholder="Descreva brevemente sua atividade..."></textarea>
-                </div>
-                <button type="submit" class="saida">Registrar Saída</button>
-            {% elif presente and presente.hora_saida %}
-                <button type="submit" disabled style="background:#d1d5db; cursor:not-allowed;">Ponto do dia concluído</button>
+            {% if presente is None %}
+                <span class="status-badge status-ausente">Ponto não registrado</span>
+            {% elif presente.hora_saida is None %}
+                <span class="status-badge status-presente">Presente</span>
             {% else %}
-                <button type="submit">Registrar Entrada</button>
+                <span class="status-badge status-completo">Dia concluído</span>
             {% endif %}
-        </form>
+
+            <div class="horarios">
+                <div class="horario-item">
+                    <p class="label">Entrada</p>
+                    <p class="valor {% if not presente %}pendente{% endif %}">
+                        {% if presente %}{{ presente.hora_entrada|time:"H:i" }}{% else %}--:--{% endif %}
+                    </p>
+                </div>
+                <div class="horario-item">
+                    <p class="label">Saída</p>
+                    <p class="valor {% if not presente or not presente.hora_saida %}pendente{% endif %}">
+                        {% if presente and presente.hora_saida %}{{ presente.hora_saida|time:"H:i" }}{% else %}--:--{% endif %}
+                    </p>
+                </div>
+            </div>
+
+            {% if mensagem %}
+                <div class="mensagem-sucesso">{{ mensagem }}</div>
+            {% endif %}
+
+            <p class="gps-status" id="gps-status">Obtendo localização...</p>
+
+            <form method="post" id="form-ponto">
+                {% csrf_token %}
+                <input type="hidden" name="latitude" id="latitude">
+                <input type="hidden" name="longitude" id="longitude">
+
+                {% if presente and presente.hora_saida is None %}
+                    <div class="field">
+                        <label for="atividade_diaria">Faca um resumo das atividades realizadas hoje.</label>
+                        <textarea name="atividade_diaria" id="atividade_diaria" required placeholder="Descreva brevemente sua atividade..."></textarea>
+                    </div>
+                    <button type="submit" class="saida" id="btn-submit" disabled>Registrar Saída</button>
+                {% elif presente and presente.hora_saida %}
+                    <button type="submit" disabled>Ponto do dia concluído</button>
+                {% else %}
+                    <button type="submit" id="btn-submit" disabled>Registrar Entrada</button>
+                {% endif %}
+            </form>
+
+        {% endif %}
     </div>
+
+    {% if request.user.aluno.empresa %}
+    <script>
+        const gpsStatus = document.getElementById('gps-status');
+        const btnSubmit = document.getElementById('btn-submit');
+        const latInput = document.getElementById('latitude');
+        const lngInput = document.getElementById('longitude');
+
+        if (!navigator.geolocation) {
+            gpsStatus.textContent = 'Seu navegador não suporta geolocalização.';
+        } else {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    latInput.value = position.coords.latitude;
+                    lngInput.value = position.coords.longitude;
+                    gpsStatus.textContent = 'Localização obtida.';
+                    if (btnSubmit) btnSubmit.disabled = false;
+                },
+                function (error) {
+                    gpsStatus.textContent = 'Não foi possível obter sua localização. Ative o GPS e permita o acesso.';
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        }
+    </script>
+    {% endif %}
 </body>
 </html>

@@ -204,6 +204,7 @@
         .atalho-icone.roxo { background: #ede9fe; }
         .atalho-icone.indigo { background: #e0e7ff; }
         .atalho-icone.verde { background: #dcfce7; }
+        .atalho-icone.laranja { background: #ffedd5; }
 
         .atalho-icone svg {
             width: 22px;
@@ -217,6 +218,7 @@
         .atalho-icone.roxo svg { stroke: #7c3aed; }
         .atalho-icone.indigo svg { stroke: #4f46e5; }
         .atalho-icone.verde svg { stroke: #16a34a; }
+        .atalho-icone.laranja svg { stroke: #ea580c; }
 
         .atalho-card h3 {
             font-size: 15px;
@@ -333,6 +335,17 @@
 
         .field {
             margin-bottom: 16px;
+        }
+
+        .field-separador {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            color: #9ca3af;
+            margin: 22px 0 12px;
+            padding-top: 14px;
+            border-top: 1px solid #e5e7eb;
         }
 
         .field label {
@@ -456,6 +469,12 @@
             </span>
             Adicionar Aluno
         </button>
+        <button class="menu-item" onclick="abrirPainel('painel-empresa')">
+            <span class="icone-chip">
+                <svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1M9 13h1M14 9h1M14 13h1"/></svg>
+            </span>
+            Adicionar Empresa
+        </button>
 
         <div class="sidebar-rodape">Vivência &middot; Instituto JCA</div>
     </div>
@@ -493,6 +512,16 @@
                 <div>
                     <h3>Adicionar aluno</h3>
                     <p>Cadastre um novo aluno e vincule à turma correta.</p>
+                </div>
+            </button>
+
+            <button class="atalho-card" onclick="abrirPainel('painel-empresa')">
+                <div class="atalho-icone laranja">
+                    <svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1M9 13h1M14 9h1M14 13h1"/></svg>
+                </div>
+                <div>
+                    <h3>Adicionar empresa</h3>
+                    <p>Cadastre uma empresa de vivência e o local para bater ponto.</p>
                 </div>
             </button>
         </div>
@@ -567,6 +596,52 @@
         </form>
     </div>
 
+    <!-- Painel: Adicionar Empresa -->
+    <div class="painel" id="painel-empresa">
+        <div class="painel-header">
+            <span class="icone-chip">
+                <svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1M9 13h1M14 9h1M14 13h1"/></svg>
+            </span>
+            <h2>Adicionar Empresa</h2>
+            <button class="fechar" onclick="fecharPaineis()">&times;</button>
+        </div>
+
+        {% if mensagem_empresa %}
+            <div class="mensagem-sucesso">✓ {{ mensagem_empresa }}</div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="empresa">
+
+            {% for field in empresa_form %}
+                <div class="field">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <span class="helptext">{{ field.help_text }}</span>
+                    {% endif %}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+
+            <div class="field-separador">Local para bater ponto</div>
+
+            {% for field in local_form %}
+                <div class="field">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <span class="helptext">{{ field.help_text }}</span>
+                    {% endif %}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+
+            <button type="submit">Adicionar Empresa</button>
+        </form>
+    </div>
+
     <script>
         function abrirPainel(id) {
             document.getElementById('overlay').classList.add('aberto');
@@ -577,6 +652,7 @@
             document.getElementById('overlay').classList.remove('aberto');
             document.getElementById('painel-turma').classList.remove('aberto');
             document.getElementById('painel-aluno').classList.remove('aberto');
+            document.getElementById('painel-empresa').classList.remove('aberto');
         }
 
         {% if mensagem_turma %}
@@ -585,6 +661,10 @@
 
         {% if mensagem_aluno %}
             abrirPainel('painel-aluno');
+        {% endif %}
+
+        {% if mensagem_empresa %}
+            abrirPainel('painel-empresa');
         {% endif %}
     </script>
 </body>
