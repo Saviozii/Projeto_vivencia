@@ -46,6 +46,8 @@ class Add_Aluno(forms.Form):
     email = forms.EmailField()
     senha = forms.CharField(widget=forms.PasswordInput)
 
+    empresa = forms.ModelChoiceField(
+    queryset=EmpresaVivencia.objects.all())
 
     turma = forms.ModelChoiceField(
         queryset=Turmas.objects.all()

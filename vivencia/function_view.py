@@ -8,6 +8,8 @@ from .models import Aluno, Turmas, Presenca, Localizacao
 from django.utils import timezone
 from .local import calcular_distancia
 from decimal import Decimal, InvalidOperation
+from django.db import transaction
+from .forms import LocalizacaoForm, EmpresaVivenciaForm
 
 def adicionar_turma(request):
     mensagem = ''
@@ -35,18 +37,20 @@ def adicionar_aluno(request):
 
         if form.is_valid():
 
-            user = User.objects.create_user(
-                username=form.cleaned_data["username"],
-                first_name=form.cleaned_data["nome"],
-                email=form.cleaned_data["email"],
-                password=form.cleaned_data["senha"]
-            )
+            with transaction.atomic():
+                user = User.objects.create_user(
+                    username=form.cleaned_data["username"],
+                    first_name=form.cleaned_data["nome"],
+                    email=form.cleaned_data["email"],
+                    password=form.cleaned_data["senha"]
+                )
 
-            aluno = Aluno.objects.create(
-                user=user,
-                turma=form.cleaned_data["turma"],
-                foto=form.cleaned_data["foto"]
-            )
+                aluno = Aluno.objects.create(
+                    user=user,
+                    turma=form.cleaned_data["turma"],
+                    empresa=form.cleaned_data["empresa"],
+                    foto=form.cleaned_data["foto"]
+                )
 
             mensagem = (
                 f"O aluno {aluno.user.first_name} "
@@ -57,9 +61,6 @@ def adicionar_aluno(request):
         form = Add_Aluno()
 
     return form, mensagem
-
-
-from django.db import transaction
 
 def adicionar_empresa(request):
     mensagem = ""
