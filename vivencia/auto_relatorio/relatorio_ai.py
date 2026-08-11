@@ -30,7 +30,6 @@ Dados:
 model = GoogleGenerativeAI(
     model = "gemini-3.5-flash-lite",
     google_api_key = os.getenv("GEMINI_API_KEY"),
-
 )
 
 dados = dados_de_hj()

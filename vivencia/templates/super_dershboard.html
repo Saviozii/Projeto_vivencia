@@ -6,8 +6,31 @@
     <title>Painel do Supervisor - Vivência</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            /* ---------- Paleta geométrica (trama de triângulos) ---------- */
+            --teal: #2C8C99;
+            --yellow: #FFC627;
+            --orange: #F2994A;
+            --navy: #3F3B6C;
+            --maroon: #B7294D;
+            --brown: #A24328;
+            --green: #8BC53F;
+            --pink: #F2A0B5;
+
+            --papel: #FBF8F2;
+            --papel-alt: #FFFFFF;
+            --tinta: #241F3B;
+            --tinta-suave: #6E6A85;
+            --linha: #E9E4D8;
+
+            --raio-lg: 18px;
+            --raio-md: 14px;
+            --raio-sm: 10px;
+            --sombra: 0 2px 10px rgba(36, 31, 59, 0.06);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,39 +38,66 @@
         }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f4f3f9;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            background: var(--papel);
             min-height: 100vh;
-            padding: 40px 20px 60px;
-            color: #211d33;
+            padding: 0 0 60px;
+            color: var(--tinta);
+        }
+
+        h1, h2 {
+            font-family: 'Fredoka', 'Segoe UI', sans-serif;
+        }
+
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible {
+            outline: 2px solid var(--navy);
+            outline-offset: 2px;
+        }
+
+        /* ---------- Faixa geométrica decorativa (assinatura visual) ---------- */
+        .faixa-geo {
+            width: 100%;
+            height: 34px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='40' viewBox='0 0 320 40'%3E%3Cg%3E%3Cpolygon points='0,0 40,0 0,40' fill='%232C8C99'/%3E%3Cpolygon points='40,0 40,40 20,20' fill='%232C8C99'/%3E%3Cpolygon points='40,0 60,20 40,40' fill='%23FFC627'/%3E%3Cpolygon points='80,0 60,20 80,40' fill='%23FFC627'/%3E%3Cpolygon points='80,10 100,0 120,10 100,20' fill='%23F2994A'/%3E%3Cpolygon points='80,22 100,12 120,22 100,32' fill='%23F2994A'/%3E%3Cpolygon points='120,0 160,0 120,20' fill='%233F3B6C'/%3E%3Cpolygon points='160,20 160,40 120,40' fill='%233F3B6C'/%3E%3Crect x='160' y='0' width='40' height='40' fill='%23fff'/%3E%3Cclippath id='c'%3E%3Crect x='160' y='0' width='40' height='40'/%3E%3C/clippath%3E%3Cg clip-path='url(%23c)'%3E%3Cline x1='150' y1='40' x2='190' y2='0' stroke='%23B7294D' stroke-width='6'/%3E%3Cline x1='160' y1='50' x2='210' y2='0' stroke='%23B7294D' stroke-width='6'/%3E%3Cline x1='140' y1='30' x2='180' y2='-10' stroke='%23B7294D' stroke-width='6'/%3E%3C/g%3E%3Cpolygon points='200,0 200,40 220,20' fill='%23A24328'/%3E%3Cpolygon points='240,0 240,40 220,20' fill='%23A24328'/%3E%3Cpolygon points='240,0 280,0 260,20' fill='%238BC53F'/%3E%3Cpolygon points='240,40 280,40 260,20' fill='%238BC53F'/%3E%3Cpolygon points='280,0 320,0 320,10 290,10' fill='%23F2A0B5'/%3E%3Cpolygon points='280,10 310,10 295,25' fill='%23F2A0B5'/%3E%3C/g%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+            background-size: 320px 34px;
+        }
+
+        .faixa-geo.franja {
+            height: 20px;
+            border-radius: 0 0 var(--raio-lg) var(--raio-lg);
+            box-shadow: var(--sombra);
+            margin-bottom: 26px;
         }
 
         .container {
-            max-width: 1040px;
+            max-width: 1080px;
             margin: 0 auto;
+            padding: 0 24px;
         }
 
         .voltar {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            color: #4f46e5;
+            color: var(--navy);
             text-decoration: none;
             font-size: 14px;
             font-weight: 600;
-            margin-bottom: 20px;
+            margin: 22px 0 18px;
         }
 
         .voltar:hover {
             text-decoration: underline;
         }
 
-        /* ---------- Painel superior (relógio de ponto) ---------- */
+        /* ---------- Painel superior: cartão-ticket com franja ---------- */
         .painel-topo {
-            background: linear-gradient(120deg, #211d33 0%, #37235e 55%, #4f46e5 100%);
-            border-radius: 16px;
-            padding: 28px 32px;
-            margin-bottom: 24px;
+            background: linear-gradient(120deg, var(--navy) 0%, #4a3d78 45%, var(--teal) 100%);
+            border-radius: var(--raio-lg) var(--raio-lg) 0 0;
+            padding: 30px 32px 26px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -62,76 +112,108 @@
             content: "";
             position: absolute;
             inset: 0;
-            background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
-            background-size: 14px 14px;
-            opacity: 0.5;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.10) 1.5px, transparent 1.5px);
+            background-size: 16px 16px;
+            opacity: 0.6;
             pointer-events: none;
         }
 
         .painel-topo h1 {
-            font-size: 22px;
-            font-weight: 700;
+            font-size: 24px;
+            font-weight: 600;
             margin-bottom: 6px;
+            letter-spacing: 0.2px;
         }
 
         .painel-topo .subtitulo {
             font-size: 13px;
-            color: #c9c3f0;
+            color: #d8d2f5;
             text-transform: capitalize;
+            font-weight: 500;
         }
 
+        /* Relógio em formato de "cartão de ponto" com perfuração de ticket */
         .relogio {
             font-family: 'Space Mono', monospace;
-            font-size: 36px;
+            font-size: 34px;
             font-weight: 700;
             letter-spacing: 2px;
-            background: rgba(0, 0, 0, 0.25);
-            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.28);
+            padding: 14px 22px;
             border-radius: 10px;
             position: relative;
             z-index: 1;
+            border: 1px solid rgba(255,255,255,0.12);
         }
+
+        .relogio::before,
+        .relogio::after {
+            content: "";
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            height: 1px;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.4) 1.4px, transparent 1.5px);
+            background-size: 9px 100%;
+            background-repeat: repeat-x;
+        }
+
+        .relogio::before { top: 5px; }
+        .relogio::after { bottom: 5px; }
 
         .relogio span.piscando {
             animation: piscar 1s steps(1) infinite;
+            color: var(--yellow);
         }
 
         @keyframes piscar {
             50% { opacity: 0.3; }
         }
 
-        /* ---------- Cards de resumo ---------- */
+        /* ---------- Cards de resumo com bandeirola ---------- */
         .cards-resumo {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 16px;
-            margin-bottom: 24px;
+            margin-bottom: 26px;
         }
 
         .resumo-item {
-            background: #fff;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(33, 29, 51, 0.06);
-            border-left: 4px solid transparent;
+            background: var(--papel-alt);
+            border-radius: var(--raio-md);
+            padding: 30px 20px 18px;
+            box-shadow: var(--sombra);
+            position: relative;
+            overflow: visible;
+            border: 1px solid var(--linha);
         }
 
-        .resumo-item.total { border-left-color: #4f46e5; }
-        .resumo-item.ativos { border-left-color: #f59e0b; }
-        .resumo-item.completos { border-left-color: #22c55e; }
-        .resumo-item.ausentes { border-left-color: #ef4444; }
+        .resumo-item .bandeirola {
+            position: absolute;
+            top: -6px;
+            left: 22px;
+            width: 20px;
+            height: 30px;
+            clip-path: polygon(0 0, 100% 0, 100% 76%, 50% 100%, 0 76%);
+        }
+
+        .resumo-item.total .bandeirola { background: var(--navy); }
+        .resumo-item.ativos .bandeirola { background: var(--orange); }
+        .resumo-item.completos .bandeirola { background: var(--green); }
+        .resumo-item.ausentes .bandeirola { background: var(--maroon); }
 
         .resumo-item .numero {
             font-family: 'Space Mono', monospace;
             font-size: 30px;
             font-weight: 700;
-            color: #211d33;
+            color: var(--tinta);
         }
 
         .resumo-item .rotulo {
             font-size: 13px;
-            color: #6b7280;
+            color: var(--tinta-suave);
             margin-top: 4px;
+            font-weight: 500;
         }
 
         /* ---------- Grid principal ---------- */
@@ -139,20 +221,44 @@
             display: grid;
             grid-template-columns: 1.3fr 1fr;
             gap: 20px;
-            margin-bottom: 24px;
+            margin-bottom: 26px;
         }
 
         .card {
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(33, 29, 51, 0.06);
+            background: var(--papel-alt);
+            border-radius: var(--raio-md);
+            box-shadow: var(--sombra);
             padding: 24px;
+            border: 1px solid var(--linha);
+            border-top: 3px solid transparent;
         }
 
+        .card-presencas { border-top-color: var(--teal); }
+        .card-situacao { border-top-color: var(--navy); }
+
         .card h2 {
-            color: #1f2937;
-            font-size: 16px;
+            color: var(--tinta);
+            font-size: 17px;
+            font-weight: 600;
             margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .card h2::before {
+            content: "";
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 12px solid var(--teal);
+            flex-shrink: 0;
+        }
+
+        .card-situacao h2::before {
+            border-bottom-color: var(--navy);
         }
 
         .grafico-wrapper {
@@ -167,50 +273,73 @@
             align-items: center;
             margin-bottom: 16px;
             gap: 12px;
+            flex-wrap: wrap;
         }
 
         .busca-linha input {
             flex: 1;
-            max-width: 260px;
-            padding: 9px 14px;
-            border: 1px solid #e5e7eb;
+            max-width: 210px;
+            padding: 9px 14px 9px 34px;
+            border: 1.5px solid var(--linha);
             border-radius: 20px;
             font-size: 13px;
             outline: none;
+            font-family: inherit;
             transition: border-color 0.15s ease;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236E6A85' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: 12px center;
+            background-size: 13px;
         }
 
         .busca-linha input:focus {
-            border-color: #4f46e5;
+            border-color: var(--teal);
         }
 
-        /* ---------- Abas de turma ---------- */
+        /* ---------- Abas de turma (etiquetas com ponta) ---------- */
         .abas-turmas {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             flex-wrap: wrap;
             margin-bottom: 16px;
         }
 
         .abas-turmas button {
-            padding: 6px 16px;
-            border: 1px solid #e5e7eb;
+            position: relative;
+            padding: 6px 24px 6px 16px;
+            border: 1.5px solid var(--linha);
             border-radius: 20px;
             background: #fff;
             font-size: 13px;
-            color: #6b7280;
+            font-weight: 500;
+            color: var(--tinta-suave);
             cursor: pointer;
+            font-family: inherit;
             transition: all 0.15s ease;
         }
 
+        .abas-turmas button::after {
+            content: "";
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 4px 0 4px 6px;
+            border-color: transparent transparent transparent currentColor;
+            opacity: 0.55;
+        }
+
         .abas-turmas button:hover {
-            border-color: #4f46e5;
-            color: #4f46e5;
+            border-color: var(--navy);
+            color: var(--navy);
         }
 
         .abas-turmas button.aba-ativa {
-            background: #4f46e5;
-            border-color: #4f46e5;
+            background: var(--navy);
+            border-color: var(--navy);
             color: #fff;
         }
 
@@ -220,47 +349,47 @@
             align-items: center;
             gap: 10px;
             margin-bottom: 14px;
-            background: #f8f7ff;
+            background: #F6F1FB;
             padding: 8px 16px;
             border-radius: 12px;
-            border: 1px solid #ede9fe;
+            border: 1px solid #E7DEF6;
         }
 
         .filtro-data .icone-calendario {
             display: flex;
             align-items: center;
-            color: #4f46e5;
+            color: var(--navy);
             flex-shrink: 0;
         }
 
         .filtro-data label {
             font-size: 13px;
-            color: #6b7280;
+            color: var(--tinta-suave);
             font-weight: 600;
             display: none;
         }
 
         .filtro-data input[type="date"] {
             padding: 7px 12px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--linha);
             border-radius: 8px;
             font-size: 13px;
             font-family: inherit;
             outline: none;
             background: #fff;
-            color: #1f2937;
+            color: var(--tinta);
             cursor: pointer;
             transition: border-color 0.15s ease, box-shadow 0.15s ease;
             min-width: 150px;
         }
 
         .filtro-data input[type="date"]:hover {
-            border-color: #c7c3f0;
+            border-color: #c7b8ea;
         }
 
         .filtro-data input[type="date"]:focus {
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(63,59,108,0.12);
         }
 
         /* ---------- Tabela "cartão de ponto" ---------- */
@@ -272,26 +401,27 @@
 
         th {
             text-align: left;
-            font-size: 12px;
-            color: #9ca3af;
+            font-size: 11.5px;
+            color: var(--tinta-suave);
             text-transform: uppercase;
+            letter-spacing: 0.4px;
             padding: 10px 12px;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 2px solid var(--linha);
         }
 
         td {
             padding: 13px 12px;
             font-size: 14px;
-            color: #1f2937;
+            color: var(--tinta);
         }
 
         tbody tr {
-            border-bottom: 1px dashed #e2e0ee;
+            border-bottom: 1px dashed var(--linha);
             transition: background 0.1s ease;
         }
 
         tbody tr:hover {
-            background: #faf9ff;
+            background: #FAF8F2;
         }
 
         tbody tr:last-child {
@@ -305,10 +435,10 @@
         }
 
         .avatar-mini {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--navy), var(--teal));
             color: #fff;
             display: flex;
             align-items: center;
@@ -316,10 +446,11 @@
             font-size: 12px;
             font-weight: 700;
             flex-shrink: 0;
+            clip-path: polygon(7px 0, 100% 0, 100% 100%, 0 100%, 0 7px);
         }
 
         td a {
-            color: #4f46e5;
+            color: var(--navy);
             text-decoration: none;
             font-weight: 600;
         }
@@ -329,28 +460,51 @@
         }
 
         .status-pill {
-            display: inline-block;
-            padding: 4px 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 11px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
         }
 
-        .status-presente {
-            background: #fef3c7;
-            color: #92400e;
+        .status-pill::before {
+            content: "";
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 4px 0 4px 6px;
         }
 
-        .status-completo {
-            background: #dcfce7;
-            color: #166534;
+        .status-presente {
+            background: #FFF3DA;
+            color: #8A5A00;
         }
+        .status-presente::before { border-color: transparent transparent transparent var(--orange); }
+
+        .status-completo {
+            background: #E9F5DA;
+            color: #4A6B1E;
+        }
+        .status-completo::before { border-color: transparent transparent transparent var(--green); }
 
         .vazio {
             text-align: center;
-            color: #9ca3af;
-            padding: 30px 0;
+            color: var(--tinta-suave);
+            padding: 34px 0;
             font-size: 14px;
+        }
+
+        .vazio::before {
+            content: "";
+            display: block;
+            width: 26px;
+            height: 34px;
+            margin: 0 auto 10px;
+            background: var(--pink);
+            opacity: 0.75;
+            clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
         }
 
         @media (max-width: 720px) {
@@ -365,6 +519,8 @@
     </style>
 </head>
 <body>
+    <div class="faixa-geo"></div>
+
     <div class="container">
         <a href="{% url 'supervisor_home' %}" class="voltar">&larr; Home</a>
 
@@ -375,31 +531,36 @@
             </div>
             <div class="relogio" id="relogio">--:--<span class="piscando">:</span>--</div>
         </div>
+        <div class="faixa-geo franja"></div>
 
         <div class="cards-resumo">
             <div class="resumo-item total">
+                <div class="bandeirola"></div>
                 <div class="numero">{{ total_aluno|length }}</div>
                 <div class="rotulo">Total de alunos</div>
             </div>
             <div class="resumo-item ativos">
+                <div class="bandeirola"></div>
                 <div class="numero" id="numero-ativos">0</div>
                 <div class="rotulo">Ainda presentes</div>
             </div>
             <div class="resumo-item completos">
+                <div class="bandeirola"></div>
                 <div class="numero" id="numero-completos">0</div>
                 <div class="rotulo">Dia concluído</div>
             </div>
             <div class="resumo-item ausentes">
+                <div class="bandeirola"></div>
                 <div class="numero" id="numero-ausentes">0</div>
                 <div class="rotulo">Sem ponto hoje</div>
             </div>
         </div>
 
         <div class="grid-topo">
-            <div class="card">
+            <div class="card card-presencas">
                 <div class="busca-linha">
                     <h2 style="margin-bottom:0;">Alunos com ponto registrado</h2>
-                    <input type="text" id="busca-aluno" placeholder="Buscar aluno..." style="max-width:200px;">
+                    <input type="text" id="busca-aluno" placeholder="Buscar aluno...">
                 </div>
 
                 <div class="filtro-data">
@@ -462,7 +623,7 @@
                 {% endif %}
             </div>
 
-            <div class="card">
+            <div class="card card-situacao">
                 <h2>Situação dos alunos</h2>
                 <div class="grafico-wrapper">
                     <canvas id="grafico-status"></canvas>
@@ -470,6 +631,8 @@
             </div>
         </div>
     </div>
+
+    <div class="faixa-geo"></div>
 
     <script>
         // Relógio de ponto ao vivo
@@ -519,7 +682,7 @@
                     labels: ['Ainda presentes', 'Dia concluído', 'Sem ponto hoje'],
                     datasets: [{
                         data: [ativos, completos, ausentes],
-                        backgroundColor: ['#f59e0b', '#22c55e', '#ef4444'],
+                        backgroundColor: ['#F2994A', '#8BC53F', '#B7294D'],
                         borderWidth: 0
                     }]
                 },
@@ -529,7 +692,7 @@
                     plugins: {
                         legend: {
                             position: 'bottom',
-                            labels: { boxWidth: 12, font: { size: 12 } }
+                            labels: { boxWidth: 12, font: { size: 12, family: 'Inter' } }
                         }
                     }
                 }
