@@ -4,7 +4,7 @@ from langchain_google_genai import GoogleGenerativeAI
 import json
 from langchain_core.prompts import ChatPromptTemplate
 from .servicos import dados_de_hj
-from vivencia.models import relatorios
+from vivencia.models import Relatorios
 
 load_dotenv()
 
@@ -42,7 +42,7 @@ def relatorio(dados):
 relatorio_diario_ai = relatorio(dados)
 
 def enviar_ao_banco(i):
-    enviar = relatorios.objects.create(
+    enviar = Relatorios.objects.create(
         relatorio_diario = i
     )
     enviar.save()
