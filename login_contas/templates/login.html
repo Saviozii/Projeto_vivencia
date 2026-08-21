@@ -1,127 +1,358 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Vivência</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --teal:   #1f8a93;
+            --yellow: #ffcb05;
+            --orange: #f2792a;
+            --navy:   #423c5c;
+            --red:    #c8102e;
+            --brown:  #9c5330;
+            --green:  #8bc53f;
+            --pink:   #f0a6bc;
+
+            --ink:    #2b2740;
+            --muted:  #6b7280;
+            --bg:     #faf9fc;
+            --border: #e5e2ec;
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
             min-height: 100vh;
+        }
+
+        .page {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ===== Painel hero com a foto do Instituto ===== */
+        .hero {
+            flex: 1.15;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 48px 44px;
+            color: #fff;
+            min-height: 320px;
+            background-image:
+                linear-gradient(160deg, rgba(43, 39, 64, 0.88) 0%, rgba(31, 138, 147, 0.45) 48%, rgba(66, 60, 92, 0.82) 100%),
+                url("/media/fachada.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-size: 12px;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .hero-eyebrow .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--yellow);
+            border-radius: 50%;
+        }
+
+        .hero h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(24px, 2.6vw, 36px);
+            line-height: 1.2;
+            margin-top: 12px;
+            max-width: 420px;
+        }
+
+        .hero p {
+            margin-top: 14px;
+            max-width: 380px;
+            font-size: 14.5px;
+            line-height: 1.5;
+            opacity: 0.92;
+        }
+
+        /* ===== Trilha de flags — costura entre foto e card ===== */
+        .brand-rail {
+            width: clamp(56px, 7vw, 104px);
+            flex-shrink: 0;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            padding: 28px 0;
+        }
+
+        .flag {
+            width: clamp(28px, 3.6vw, 48px);
+            aspect-ratio: 1 / 1;
+        }
+
+        .flag svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* ===== Área do formulário ===== */
+        .content {
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            background: #ffffff;
+            padding: 32px 24px;
         }
 
         .login-card {
-            background: #ffffff;
             width: 100%;
-            max-width: 380px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            padding: 40px 32px;
+            max-width: 360px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .brand-icon {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+
+        .brand-name {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--navy);
         }
 
         .login-card h1 {
-            text-align: center;
-            color: #1f2937;
+            font-family: 'Poppins', sans-serif;
             font-size: 24px;
-            margin-bottom: 24px;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 6px;
+        }
+
+        .login-card .subtitle {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 26px;
         }
 
         .messages {
-            margin-bottom: 16px;
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .messages p {
-            background: #fee2e2;
-            color: #b91c1c;
+            background: #fdeef1;
+            border-left: 3px solid var(--red);
+            color: #9c1c34;
             padding: 10px 14px;
-            border-radius: 6px;
-            font-size: 14px;
-            margin-bottom: 8px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            line-height: 1.4;
         }
 
         .field {
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            color: #374151;
-            margin-bottom: 6px;
+            color: var(--ink);
+            margin-bottom: 7px;
         }
 
         input[type="text"],
         input[type="password"] {
             width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-family: inherit;
             font-size: 15px;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            color: var(--ink);
+            background: #fbfbfd;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
         }
 
         input[type="text"]:focus,
         input[type="password"]:focus {
             outline: none;
-            border-color: #7c3aed;
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+            background: #ffffff;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(31, 138, 147, 0.15);
         }
 
         button {
             width: 100%;
-            padding: 12px;
-            background: #4f46e5;
+            padding: 13px;
+            background: var(--navy);
             color: #fff;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
             font-size: 15px;
             font-weight: 600;
+            letter-spacing: 0.02em;
             cursor: pointer;
-            margin-top: 8px;
-            transition: background 0.2s;
+            margin-top: 6px;
+            transition: background 0.2s, transform 0.15s;
         }
 
-        button:hover {
-            background: #4338ca;
+        button:hover { background: var(--teal); }
+        button:active { transform: translateY(1px); }
+
+        @media (max-width: 900px) {
+            .page { flex-direction: column; }
+            .hero { flex: none; min-height: 240px; padding: 32px 28px; }
+            .brand-rail {
+                width: 100%;
+                flex-direction: row;
+                height: 56px;
+                padding: 0 16px;
+            }
+            .flag { width: 26px; }
+            .content { padding: 32px 24px; }
         }
     </style>
 </head>
 <body>
-    <div class="login-card">
-        <h1>Login</h1>
 
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
+    <!-- Padrão SVG reutilizado pelos ícones de listras -->
+    <svg width="0" height="0" style="position:absolute">
+        <defs>
+            <pattern id="stripesRed" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <rect width="7" height="14" fill="var(--red)"></rect>
+                <rect x="7" width="7" height="14" fill="#ffffff"></rect>
+            </pattern>
+        </defs>
+    </svg>
 
-        <form method="post">
-            {% csrf_token %}
-            <div class="field">
-                <label for="username">Usuário</label>
-                <input type="text" name="username" id="username" required>
+    <div class="page">
+
+        <section class="hero">
+            <div class="hero-eyebrow"><span class="dot"></span> Instituto JCA</div>
+            <h2>Programa Vivência</h2>
+            <p>Acompanhamento de presença e estágio para estudantes e supervisores.</p>
+        </section>
+
+        <aside class="brand-rail" aria-hidden="true">
+            <div class="flag">
+                <svg viewBox="0 0 100 100"><polygon points="10,10 90,50 10,90" fill="var(--teal)"></polygon></svg>
             </div>
-            <div class="field">
-                <label for="password">Senha</label>
-                <input type="password" name="password" id="password" required>
+            <div class="flag">
+                <svg viewBox="0 0 100 100">
+                    <polygon points="0,0 50,50 0,100" fill="var(--yellow)"></polygon>
+                    <polygon points="100,0 50,50 100,100" fill="var(--yellow)"></polygon>
+                </svg>
             </div>
-            <button type="submit">Entrar</button>
-        </form>
+            <div class="flag">
+                <svg viewBox="0 0 100 100">
+                    <polygon points="0,45 50,0 100,45" fill="var(--orange)"></polygon>
+                    <polygon points="0,100 50,55 100,100" fill="var(--orange)"></polygon>
+                </svg>
+            </div>
+            <div class="flag">
+                <svg viewBox="0 0 100 100">
+                    <polygon points="0,0 60,0 0,60" fill="var(--navy)"></polygon>
+                    <polygon points="40,100 100,40 100,100" fill="var(--navy)"></polygon>
+                </svg>
+            </div>
+            <div class="flag">
+                <svg viewBox="0 0 100 100"><rect width="100" height="100" fill="url(#stripesRed)"></rect></svg>
+            </div>
+            <div class="flag">
+                <svg viewBox="0 0 100 100">
+                    <polygon points="0,0 100,0 50,50" fill="var(--brown)"></polygon>
+                    <polygon points="0,100 100,100 50,50" fill="var(--brown)"></polygon>
+                </svg>
+            </div>
+            <div class="flag">
+                <svg viewBox="0 0 100 100">
+                    <polygon points="0,0 45,0 0,45" fill="var(--green)"></polygon>
+                    <polygon points="55,0 100,0 100,45" fill="var(--green)"></polygon>
+                    <polygon points="0,55 45,100 0,100" fill="var(--green)"></polygon>
+                    <polygon points="100,55 100,100 55,100" fill="var(--green)"></polygon>
+                </svg>
+            </div>
+            <div class="flag">
+                <svg viewBox="0 0 100 100">
+                    <polygon points="0,30 50,60 100,30 100,100 0,100" fill="var(--pink)"></polygon>
+                </svg>
+            </div>
+        </aside>
+
+        <main class="content">
+            <div class="login-card">
+
+                <div class="brand">
+                    <svg class="brand-icon" viewBox="0 0 100 100">
+                        <polygon points="0,0 100,0 50,50" fill="var(--navy)"></polygon>
+                        <polygon points="0,100 100,100 50,50" fill="var(--teal)"></polygon>
+                    </svg>
+                    <span class="brand-name">Vivência</span>
+                </div>
+
+                <h1>Login</h1>
+                <p class="subtitle">Acesse sua conta para continuar</p>
+
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="field">
+                        <label for="username">Usuário</label>
+                        <input type="text" name="username" id="username" required>
+                    </div>
+                    <div class="field">
+                        <label for="password">Senha</label>
+                        <input type="password" name="password" id="password" required>
+                    </div>
+                    <button type="submit">Entrar</button>
+                </form>
+
+            </div>
+        </main>
+
     </div>
 </body>
 </html>

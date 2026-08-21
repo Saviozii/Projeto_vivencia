@@ -39,21 +39,21 @@ class EmpresaVivencia(models.Model):
     def __str__(self):
         return self.nome_empresa
 
+class Turnos(models.Model):
+    turno = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.turno
 
 class Aluno(models.Model):
 
-    turnos = (
-        ("M","Manhã"),
-        ("T","Tarde"),
-    )
-    
     user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="aluno")
 
     foto = models.ImageField(upload_to='fotos_alunos/',blank=True, null=True)
 
     turma = models.ForeignKey(Turmas, on_delete=models.CASCADE, related_name="alunos")
 
-    turno = models.CharField(max_length=5,choices=turnos,null=True)
+    turno = models.ForeignKey(Turnos,on_delete=models.SET_NULL,null=True)
 
     empresa = models.ForeignKey(EmpresaVivencia,on_delete=models.SET_NULL,null=True)
 

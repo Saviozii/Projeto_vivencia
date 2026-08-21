@@ -1,6 +1,6 @@
 from django import forms
 from vivencia.models import Aluno, Turmas
-from .models import EmpresaVivencia, Localizacao
+from .models import EmpresaVivencia, Localizacao, Turnos
 
 
 class LocalizacaoForm(forms.ModelForm):
@@ -45,6 +45,10 @@ class Add_Aluno(forms.Form):
     nome = forms.CharField(max_length=200)
     email = forms.EmailField()
     senha = forms.CharField(widget=forms.PasswordInput)
+
+    turno = forms.ModelChoiceField(
+        queryset=Turnos.objects.all()
+    )
 
     empresa = forms.ModelChoiceField(
     queryset=EmpresaVivencia.objects.all())
