@@ -68,23 +68,46 @@ def supervisor_home(request):
 
 @login_required
 def super_dershboard(request):
+
+    print("========== ENTROU NA SUPER DASHBOARD ==========")
+
     data_str = request.GET.get("data", "")
+
     if data_str:
         try:
-            data = timezone.datetime.strptime(data_str, "%Y-%m-%d").date()
+            data = timezone.datetime.strptime(
+                data_str,
+                "%Y-%m-%d"
+            ).date()
         except (ValueError, TypeError):
             data = timezone.localdate()
     else:
         data = timezone.localdate()
 
+    print("DATA:", data)
+
     presentes_hj, total_aluno = grafico_presenca_hj(data)
+
+    print("CONSULTA GRAFICO TERMINOU")
+
     contexto = {
-        "presentes_hj" : presentes_hj,
-        "total_aluno" : total_aluno,
-        "turmas" : Turmas.objects.all(),
-        "data_selecionada" : data.isoformat(),
+        "presentes_hj": presentes_hj,
+        "total_aluno": total_aluno,
+        "turmas": Turmas.objects.all(),
+        "data_selecionada": data.isoformat(),
     }
-    return render(request, 'super_dershboard.html', contexto)
+
+    print("CONTEXTO MONTADO")
+
+    resposta = render(
+        request,
+        "super_dershboard.html",
+        contexto
+    )
+
+    print("RENDER TERMINOU")
+
+    return resposta
 
 
 def informacoes_aluno(request, user_id):

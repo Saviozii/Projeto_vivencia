@@ -127,7 +127,7 @@ def bater_ponto(request):
         dia_ponto=dia_hj,
     ).first()
 
-    if presente is None:
+    if presente is None or presente.hora_entrada is None:
         presente = Presenca.objects.create(
             aluno=aluno,
             dia_ponto=dia_hj,
