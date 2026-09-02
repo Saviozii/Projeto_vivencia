@@ -127,15 +127,13 @@ def bater_ponto(request):
         dia_ponto=dia_hj,
     ).first()
 
-    if presente.status is "F" or presente.hora_entrada is None:
-        presente = Presenca.objects.create(
-            aluno=aluno,
-            dia_ponto=dia_hj,
-            status='P',
-            hora_entrada=hora_agr,
-            latitude_registrada=latitude_aluno,
-            longitude_registrada=longitude_aluno,
-        )
+    if presente.status == "F" or presente.hora_entrada is None:
+        presente.status = "P"
+        presente.hora_entrada = hora_agr
+        presente.latitude_registrada = latitude_aluno
+        presente.longitude_registrada = longitude_aluno
+        presente.save()
+    
         mensagem = "Entrada registrada com sucesso!"
         print(f"O {aluno} entrou às {hora_agr} horas.")
 
