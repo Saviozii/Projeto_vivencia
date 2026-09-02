@@ -121,6 +121,13 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 0 0 5px rgba(31, 138, 147, 0.15);
+            overflow: hidden; /* <-- adicionado: corta a imagem no formato do círculo */
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* <-- preenche o círculo sem distorcer */
         }
 
         .card h1 {
@@ -226,7 +233,13 @@
         <main class="content">
             <div class="card">
 
-                <div class="avatar">{{ request.user.first_name|default:request.user.username|first|upper }}</div>
+                <div class="avatar">
+                    {% if request.user.aluno.foto %}
+                        <img src="{{ request.user.aluno.foto.url }}" alt="Foto do aluno">
+                    {% else %}
+                        {{ request.user.first_name|default:request.user.username|first|upper }}
+                    {% endif %}
+                </div>
 
                 <h1>Olá, {{ request.user.first_name|default:request.user.username }}</h1>
                 <p class="subtitle">Bem-vindo à sua área do aluno</p>

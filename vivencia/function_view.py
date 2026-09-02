@@ -127,7 +127,7 @@ def bater_ponto(request):
         dia_ponto=dia_hj,
     ).first()
 
-    if presente is None or presente.hora_entrada is None:
+    if presente.status is "F" or presente.hora_entrada is None:
         presente = Presenca.objects.create(
             aluno=aluno,
             dia_ponto=dia_hj,
@@ -161,7 +161,8 @@ def bater_ponto(request):
 #Consulta 
 def grafico_presenca_hj(data=None):
     dia = data if data else timezone.localdate()
-    presente_hj = Presenca.objects.all().filter(dia_ponto=dia)
+    presente_hj = Presenca.objects.all().filter(dia_ponto=dia,
+                                                status="P")
     total_aluno = Aluno.objects.all()
     return presente_hj, total_aluno
 
