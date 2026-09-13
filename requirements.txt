@@ -8,3 +8,4 @@ psycopg[binary]==3.2.13
 celery[redis]==5.5.3
 flower==2.0.1
 whitenoise==6.8.2
+dj-database-url==2.3.0
