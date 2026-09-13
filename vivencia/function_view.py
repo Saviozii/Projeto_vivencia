@@ -122,10 +122,11 @@ def bater_ponto(request):
     dia_hj = timezone.localdate()
     hora_agr = timezone.localtime().time()
 
-    presente = Presenca.objects.filter(
+    presente, criado = Presenca.objects.get_or_create(
         aluno=aluno,
         dia_ponto=dia_hj,
-    ).first()
+        defaults={"status": "F"},
+    )
 
     if presente.status == "F" or presente.hora_entrada is None:
         presente.status = "P"

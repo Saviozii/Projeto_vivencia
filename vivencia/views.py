@@ -1,11 +1,14 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
 from .function_view import adicionar_turma, adicionar_aluno, bater_ponto, grafico_presenca_hj, aluno_infor
 from .models import Aluno, Turmas
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from .forms import Add_Turma, Add_Aluno, EmpresaVivenciaForm, LocalizacaoForm
+
+def is_staff(user):
+    return user.is_staff
 
 @login_required
 def aluno_home(request):
@@ -48,7 +51,7 @@ def adicionar_empresa(request):
 
     return form_empresa, form_local, mensagem
 
-@login_required
+@user_passes_test(is_staff, login_url='login')
 def supervisor_home(request):
     turma_form, mensagem_turma = adicionar_turma(request)
     aluno_form, mensagem_aluno = adicionar_aluno(request)
@@ -66,7 +69,7 @@ def supervisor_home(request):
 
     return render(request, "supervisor_home.html", context)
 
-@login_required
+@user_passes_test(is_staff, login_url='login')
 def super_dershboard(request):
 
     print("========== ENTROU NA SUPER DASHBOARD ==========")
@@ -110,8 +113,9 @@ def super_dershboard(request):
     return resposta
 
 
-def informacoes_aluno(request, user_id):
-    aluno = get_object_or_404(Aluno, id=user_id)
+@user_passes_test(is_staff, login_url='login')
+def informacoes_aluno(request, aluno_id):
+    aluno = get_object_or_404(Aluno, id=aluno_id)
 
     context = {
         "aluno": aluno,
