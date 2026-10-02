@@ -87,7 +87,11 @@ def adicionar_empresa(request):
 
 
 def bater_ponto(request):
-    aluno = request.user.aluno
+    aluno = getattr(request.user, "aluno", None)
+
+    if aluno is None:
+        return None, "Seu usuário não está vinculado a um cadastro de aluno."
+
     empresa = aluno.empresa
 
     if not empresa:
